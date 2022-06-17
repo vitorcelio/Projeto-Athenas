@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athenas test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+</head>
+
+<body onload="carregarDados()">
+    <nav class="navbar navbar-expand-lg bg-black">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="img/novo-lg-athenas-branco.png" alt="" width="250">
+            </a>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" aria-current="page" href="#">Home</a>
+                    </li>
+                
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="modal fade" id="pesoIdeal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="nomeModal"></h3>
+                </div>
+                <div class="modal-body">
+                    <p> Peso ideal: <span id="pesoModal"></span> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="p-4 d-flex justify-content-start">
+        <div class="p-3 col-md-4">
+            <h2 class="text-center mt-2 mb-5">Cadastro de pessoas</h2>
+            <form action="" id="form" class="row">
+                <div class="col-md-2 mb-3">
+                    <input type="text" class="form-control" id="id" disabled readonly>
+                </div>
+                <div class="col-md-10"></div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="nascimento" class="form-label">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="nascimento" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input type="text" class="form-control" id="cpf" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="sexo" class="form-label">Sexo</label>
+                    <select id="sexo" class="form-select" required>
+                        <option selected>Selecione o sexo</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="altura" class="form-label">Altura</label>
+                    <input type="text" class="form-control" id="altura" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="peso" class="form-label">Peso</label>
+                    <input type="text" class="form-control" id="peso" required>
+                </div>
+            </form>
+            <button type="button" onclick="salvarPessoa()" class="btn btn-primary">Salvar Pessoa</button>
+            <button type="button" onclick="editar()" class="btn btn-success">Atualizar Pessoa</button>
+        </div>
+        <div class="p-3 col-md-8 border-start">
+            <h2 class="text-center mt-2 mb-5">Listagem de pessoas</h2>
+            <form class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="nomeBuscar" class="form-label">Pesquisar por Nome</label>
+                    <input type="text" class="form-control" id="nomeBuscar" required>
+                </div>
+                <div class="col-4 col-md-2 mb-3">
+                    <label for="" class="form-label text-white">.</label>
+                    <button type="button" class="form-control btn btn-primary"
+                        onclick="pesquisarPessoa()">Pesquisar</button>
+                </div>
+            </form>
+            <table class="table" id="tabelaResultados">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Nascimento</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Sexo</th>
+                        <th scope="col">Altura</th>
+                        <th scope="col">Peso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        function salvarPessoa() {
+            var id = $("#id").val();
+            var nome = $("#nome").val();
+            var nascimento = $("#nascimento").val();
+            var cpf = $("#cpf").val();
+            var sexo = $("#sexo").val();
+            var altura = $("#altura").val();
+            var peso = $("#peso").val();
+
+            $.ajax({
+                method: "POST",
+                url: "http://localhost:8080/task",
+                data: JSON.stringify({
+                    nome: nome,
+                    dataNascimento: nascimento,
+                    cpf: cpf,
+                    sexo: sexo,
+                    altura: altura,
+                    peso: peso
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    alert("Pessoa salva!" + response.nome);
+                    carregarDados();
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao salvar usuário!" + xhr.responseText);
+            });
+
+            document.getElementById('form').reset();
+        }
+
+        function carregarDados() {
+
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:8080/task",
+                data: null,
+                success: function (response) {
+                    $('#tabelaResultados > tbody > tr').remove();
+                    for (var i = 0; i < response.length; i++) {
+                        $('#tabelaResultados > tbody').append('<tr id=' + response[i].id + '><td>' + response[i].id + '</td><td>' + response[i].nome + '</td><td>' + response[i].dataNasc + '</td><td>' + response[i].cpf + '</td><td>' + response[i].sexo + '</td><td>' + response[i].altura + '</td><td>' + response[i].peso + '</td></tr>');
+                    }
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao buscar usuario: " + xhr.responseText);
+            });
+
+        }
+
+        function pesquisarPessoa() {
+            var nome = $("#nomeBuscar").val();
+
+            if (nome != null && nome.trim() != '') {
+                $.ajax({
+                    method: "GET",
+                    url: "http://localhost:8080/task/all",
+                    data: "nome=" + nome,
+                    success: function (response) {
+                        $('#tabelaResultados > tbody > tr').remove();
+                        for (var i = 0; i < response.length; i++) {
+                            $('#tabelaResultados > tbody').append('<tr id=' + response[i].id + '><td>' + response[i].id + '</td><td>' + response[i].nome + '</td><td>' + response[i].dataNasc + '</td><td>' + response[i].cpf + '</td><td>' + response[i].sexo + '</td><td>' + response[i].altura + '</td><td>' + response[i].peso + '</td><td><button onclick="editarPessoa(' + response[i].id + ')" class="btn btn-warning"><i class="bi bi-pencil-square"></i></button></td><td><button onclick="deletarPessoa(' + response[i].id + ')" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button></td><td><button data-bs-toggle="modal" data-bs-target="#pesoIdeal" onclick="mostrarPeso(' + response[i].id + ')" class="btn btn-secondary">Peso ideal</button></td></tr>');
+                        }
+                    }
+                }).fail(function (xhr, status, errorThrown) {
+                    alert("Erro ao buscar usuario: " + xhr.responseText);
+                });
+            } else {
+                carregarDados();
+            }
+        }
+
+        function mostrarPeso(id) {
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:8080/task/" + id,
+                data: null,
+                success: function (response) {
+                    $("#nomeModal").html(response.nome);
+                    $("#pesoModal").html(response.pesoIdeal);
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao buscar usuario: " + xhr.responseText);
+            });
+        }
+
+        function editarPessoa(id) {
+            $.ajax({
+                method: "GET",
+                url: "http://localhost:8080/task/" + id,
+                data: null,
+                success: function (response) {
+                    $("#id").val(response.id);
+                    $("#nome").val(response.nome);
+                    $("#nascimento").val(response.dataNasc);
+                    $("#cpf").val(response.cpf);
+                    $("#sexo").val(response.sexo);
+                    $("#altura").val(response.altura);
+                    $("#peso").val(response.peso);
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao buscar usuario: " + xhr.responseText);
+            });
+        }
+
+        function editar() {
+            var id = $("#id").val();
+            var nome = $("#nome").val();
+            var nascimento = $("#nascimento").val();
+            var cpf = $("#cpf").val();
+            var sexo = $("#sexo").val();
+            var altura = $("#altura").val();
+            var peso = $("#peso").val();
+
+            $.ajax({
+                method: "PUT",
+                url: "http://localhost:8080/task/" + id,
+                data: JSON.stringify({
+                    nome: nome,
+                    dataNascimento: nascimento,
+                    cpf: cpf,
+                    sexo: sexo,
+                    altura: altura,
+                    peso: peso
+                }),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    alert("Pessoa atualizada!" + response.nome);
+                    carregarDados();
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao buscar usuario: " + xhr.responseText);
+            });
+
+            document.getElementById('form').reset();
+        }
+
+        function deletarPessoa(id) {
+            $.ajax({
+                method: "DELETE",
+                url: "http://localhost:8080/task/" + id,
+                data: null,
+                success: function (response) {
+                    $('#' + id).remove();
+                }
+            }).fail(function (xhr, status, errorThrown) {
+                alert("Erro ao deletar usuario por id: " + xhr.responseText);
+            });
+        }
+    </script>
+</body>
+</body>
+
+</html>
